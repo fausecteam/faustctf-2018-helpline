@@ -1,0 +1,16 @@
+*.o
+*.a
+*.yate
+Makefile
+*.so
+*.so.6.0.0
+/yate/config.log
+/yate/config.status
+/yate/yate
+/yate/yate.pc
+/yate/yateiss.inc
+/access_token.json
+/yate/run
+/yate/yate-config
+/yate/yatepaths.h
+/yate/yateversn.h

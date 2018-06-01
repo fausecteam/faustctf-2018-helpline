@@ -1,0 +1,3 @@
+This is a modified YATE client library that has been patched to support python3.
+It is based on https://github.com/camillo/yaypm, with only very minor modifications
+by me, Dominik Paulus <faust-ctf@dominik-paulus.de>

@@ -1,0 +1,23 @@
+[Unit]
+Description=FAUST CTF crypto helpline
+
+[Service]
+User=helpline
+Group=helpline
+ExecStart=/srv/helpline/bin/yate -c /srv/helpline/etc/yate/ -m /srv/helpline/lib/yate/ -e /srv/helpline/share/yate/
+Restart=on-failure
+CPUQuota=100%
+LimitNPROC=512
+MemoryMax=1024M
+MemoryDenyWriteExecute=yes
+PrivateDevices=yes
+PrivateTmp=yes
+ProtectControlGroups=yes
+ProtectHome=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+ProtectSystem=strict
+ReadWritePaths=/srv/helpline/data
+
+[Install]
+WantedBy=multi-user.target

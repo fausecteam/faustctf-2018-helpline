@@ -1,0 +1,31 @@
+# Human-readable name of the service
+name: Cryptocurrencies helpline
+# Name of the service for usage in paths, usernames etc.: Should only consist of lowercase alphanumeric
+# characters
+slug: helpline
+authors:
+  - Dominik Paulus <faust-ctf@dominik-paulus.de>
+
+install:
+  debian_packages:
+    - build-essential
+    - sqlite3
+    - libsqlite3-dev
+  # These will be run on the Vulnbox after extracting "dist_root" (from the build) to the root file system,
+  # installing Debian packages and creating the service user
+  postinst_commands:
+    - install -o helpline -g nogroup -m 700 -d /srv/helpline/data
+    - mv /srv/helpline/helpline.service /etc/systemd/system/helpline.service
+    - systemctl daemon-reload
+    - systemctl enable helpline.service
+  # Whether to insert a firewall rule not allowing the service user to establish outgoing network connections
+  # This should generally be enabled, except for services which need outgoing connections
+  prevent_outgoing_connections: False
+
+checker:
+  module: helpline
+  class: HelplineChecker
+  debian_packages:
+    - python3-scipy
+    - python3-twisted
+    - sox

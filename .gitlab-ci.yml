@@ -1,0 +1,46 @@
+stages:
+  - build
+  - upload
+
+build_job:
+  stage: build
+  image: "debian:stretch"
+  before_script:
+    - apt-get -y -qq update
+    - apt-get -y -qq install build-essential libsqlite3-dev pkg-config patchelf
+  script:
+    # Install client dist
+    - make install
+    - cp integration/helpline.service dist_root/srv/helpline/
+    # Checker dist
+    - make install_checker
+    - mkdir -p checker_root/systemd/
+    - cp integration/helpline.service checker_root/systemd/helpline_checker.service
+  artifacts:
+    paths:
+      - metadata.yml
+      - dist_root/
+      - checker_root/
+  only:
+    - master
+  tags:
+    - faust
+    - docker
+
+upload_job:
+  stage: upload
+  script:
+    - ssh ci-upload@www.faust.cs.fau.de mkdir -p "/var/www/files/internal/ci/faustctf/2018/$CI_PROJECT_NAME"
+    - tar -v -czp -H posix -f dist_root.tar.gz -C dist_root .
+    - tar -v -czp -H posix -f checker_root.tar.gz -C checker_root .
+    - scp metadata.yml dist_root.tar.gz checker_root.tar.gz "ci-upload@www.faust.cs.fau.de:/var/www/files/internal/ci/faustctf/2018/$CI_PROJECT_NAME/"
+  after_script:
+    - find "$CI_PROJECT_DIR" -mindepth 1 -delete
+  variables:
+    GIT_STRATEGY: none
+  only:
+    - master
+  tags:
+    - faust
+    - www-upload
+
